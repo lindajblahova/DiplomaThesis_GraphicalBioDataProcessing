@@ -6,7 +6,7 @@ if (false) {
 	roiManager("List");
 	saveAs("Results", "D:/FRI/ING/DP/GIT_REPO/Java_Script/resources/Outputs/cropped//region.csv");
 } else {
-	makeRectangle(342, 1296, 2526, 1530);
+	makeRectangle(324, 1254, 2646, 1656);
 }
 run("Crop");
 run("Image Sequence... ", "select=D:/FRI/ING/DP/GIT_REPO/Java_Script/resources/Outputs/cropped/ dir=D:/FRI/ING/DP/GIT_REPO/Java_Script/resources/Outputs/cropped/ format=JPG use");

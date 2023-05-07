@@ -6,9 +6,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Class Common
+ * contains the attributes and the methods that are commonly used among other classes
+ */
 public class Common {
 
-    public static final HashMap<String, String> argumentsMap = new HashMap<>();
+    public static HashMap<String, String> argumentsMap = new HashMap<>();
     public static List<String> fileNamesList = new ArrayList<>();
 
     public static final String sampleDirParamName = "sampleDirParam";
@@ -20,6 +24,14 @@ public class Common {
     public static final String cellSizeMinParamName = "cellSizeMinParam" ;
     public static final String cellSizeMaxParamName = "cellSizeMaxParam" ;
 
+    /**
+     * setParameter - replaces the parameter value in a string based on whether it's predefined or not
+     * @param content - string in which the value should be replaced
+     * @param paramName - value that shall be replaced
+     * @param paramValue - new value to be set
+     * @param isPredefined - states if the paramName has predefined value in the code or not
+     * @return - String - updated string
+     */
     public static String setParameter(String content, String paramName, String paramValue, boolean isPredefined) {
 
         if (isPredefined)
@@ -29,12 +41,25 @@ public class Common {
         return content.replace(paramName, paramValue);
     }
 
+    /**
+     * setParameter - replaces the parameter value in a string with the value stored in the arguments map.
+     * Used for paths from the config file
+     * @param content - string in which the value should be replaced
+     * @param paramName - value that shall be replaced
+     * @return
+     */
     public static String setParameter(String content, String paramName) {
 
         return content.replace(paramName,
                 argumentsMap.get(paramName).replace("\\", "/"));
     }
 
+    /**
+     * getFileNameList - reads the names of the files present in the sampleDirectory
+     * @param sampleDirectory - path to the directory
+     * @param withExtension - states if the list should contain the file extensions or not
+     * @return List<String> - list with the filenames
+     */
     public static List<String> getFileNameList(File sampleDirectory, boolean withExtension) {
         List<String> fileNamesList = new ArrayList<>();
 

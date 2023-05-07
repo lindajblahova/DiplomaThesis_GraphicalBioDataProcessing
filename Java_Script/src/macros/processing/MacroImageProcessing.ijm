@@ -1,7 +1,7 @@
-imgnm  = "20181211_175152";
+imgnm  = "20181211_175204";
 title = imgnm + ".jpg";
 title1 = imgnm + "-1.jpg";
-open("D:/FRI/ING/DP/GIT_REPO/Java_Script/resources/Outputs/cropped//" + title);
+open("D:/FRI/ING/DP/GIT_REPO/Java_Script/resources/Samples/" + title);
 run("Duplicate...", " ");
 getStatistics(mean, std);
 if((mean > 165 && std > 76) || std >= 98) {

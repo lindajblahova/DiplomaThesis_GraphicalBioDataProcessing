@@ -1,11 +1,16 @@
 package code.common;
 
-import code.common.Common;
-
 import java.io.*;
 
+/**
+ * Class ReadConfig
+ * reads the configuration file
+ */
 public class ReadConfig {
 
+    /**
+     * readConfigFile - reads the configuration file stored in resources/config/
+     */
     public void readConfigFile() {
 
         // read the config file

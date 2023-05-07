@@ -16,12 +16,13 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
-import java.util.Locale;
-import java.util.Scanner;
 
+/**
+ * Class Stats
+ * processes the results produced by ImageJ, calculates the statistics and draws the graphs
+ */
 public class Stats {
 
     private ArrayList<LinkedList<Integer[]>> outlinesAll;
@@ -36,9 +37,8 @@ public class Stats {
     final String thresholdDistanceCellPxParamValue = "300";
 
     /**
-     * read outlines in one file CSV with name
-     *
-     * @param fileNameOutline
+     * readOutlines - reads outlines stored in the List_ file
+     * @param fileNameOutline - name of the file containing outlines
      */
     private void readOutlines(String fileNameOutline) {
 
@@ -83,6 +83,10 @@ public class Stats {
         }
     }
 
+    /**
+     * readLabeled - reads labels set by specialists from the JSON annotations associated with the image
+     * @param fileNameJSON - name of the file containing the annotations (same as image name to which it belongs)
+     */
     private void readLabeled(String fileNameJSON) {
 
         LinkedList<Integer[]> labeledImage = new LinkedList<>();
@@ -113,6 +117,12 @@ public class Stats {
         }
     }
 
+    /**
+     * joinOutlines - algorithm that classifies the identified regions, whether they belong to the same cell,
+     * to find out the real number of identified cells on the image. (if the distance between the centers of two
+     * regions is lower than set threshold, regions are classified with the same class)
+     * @param outlineImg - list that contains the coordinates and the dimensions of the identified regions on the image
+     */
     private void joinOutlines(LinkedList<Integer[]> outlineImg) {
 
         if (outlineImg.size() > 1) {
@@ -152,6 +162,10 @@ public class Stats {
         }
     }
 
+    /**
+     * findMatch - algorithm that checks whether the identified regions are inside the expert-labeled
+     * cell region - if cells were identified correctly by ImageJ
+     */
     private void findMatch() {
 
         for (int i = 0; i < outlinesAll.size(); i++) {
@@ -181,6 +195,10 @@ public class Stats {
         calculateStats();
     }
 
+    /**
+     * calculateStats - method calculates the number of cells that were identified correctly,
+     * identified but not labeled and not identified but labeled, plots the charts and exports the results to csv
+     */
     private void calculateStats() {
         ArrayList<Double> percentOkRatio = new ArrayList<>();
         ArrayList<Double> percentOkMoreRatio = new ArrayList<>();
@@ -235,6 +253,14 @@ public class Stats {
         exportToCsv(datasetToCsv, classes , datasetName, "categories_count_"+datasetName+".csv", ";");
     }
 
+    /**
+     * exportToCsv - method that exports the statistics to CSV file
+     * @param data - list of the data to be exported
+     * @param rowNames - statistic classes (for the legend)
+     * @param datasetName - name of the dataset to be used
+     * @param fileName - CSV output filename
+     * @param delimiter - delimiter
+     */
     private void exportToCsv(ArrayList<ArrayList<Double>>data, ArrayList<String> rowNames,  String datasetName,
                              String fileName, String delimiter) {
 
@@ -254,6 +280,7 @@ public class Stats {
                 else
                     header = header + fileNameList.get(i-1)+".jpg";
             }
+
             csvContent += header + "\n";
             int count = 0;
 
@@ -278,6 +305,14 @@ public class Stats {
         }
     }
 
+    /**
+     * plotStackedBarChart - creates and plots the results in the stacked bar chart
+     * @param matchOK - list that contains the numbers of correctly identified cells in the images
+     * @param matchMore - list that contains the numbers of cells in the images that were identified but not labelled
+     * @param matchLess - list that contains the numbers of cells in the images that were not identified but were labelled
+     * @param chartTitle - the chart title
+     * @param datasetNameParam - the name of the dataset in the chart
+     */
     private void plotStackedBarChart(ArrayList<Double> matchOK, ArrayList<Double> matchMore, ArrayList<Double> matchLess,
                                      String chartTitle, String datasetNameParam) {
 
@@ -309,12 +344,19 @@ public class Stats {
 
         try {
             ChartUtilities.saveChartAsPNG(new File("categories_count_" + datasetName + ".png"), chart, 1000, 600);
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             System.out.println("Error saving chart to image.");
-        }
+        } catch (ConcurrentModificationException ignored) {} // library bug that occurs from time to time
 
     }
 
+    /**
+     * plotBarChart - creates and plots the results in the stacked bar chart
+     * @param data - list that contains the numbers of correctly identified cells in the images
+     * @param chartTitle - the chart title
+     * @param dataName - the name of the dataset in the chart
+     */
     private void plotBarChart(ArrayList<Double> data, String chartTitle, String dataName) {
 
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
@@ -344,9 +386,15 @@ public class Stats {
             ChartUtilities.saveChartAsPNG(new File("identified_" + datasetName + ".png"), chart, 1000, 600);
         } catch (IOException e) {
             System.out.println("Error saving chart to image.");
-        }
+        } catch (ConcurrentModificationException ignored) {}  // library bug that occurs from time to time
     }
 
+    /**
+     * compareCells - method that does the process of comparing the cells (identified and labelled) within one image
+     * @param order - states whether there were more identified than labelled cells or more labelled than identified
+     * @param large - the list that contains more items (identified or labelled)
+     * @param small - the list that contains less items (identified or labelled)
+     */
     private void compareCells(int order, LinkedList<Integer[]> large, LinkedList<Integer[]> small) {
 
         // 0 - large: outline , 1 - large: labeled
@@ -411,7 +459,20 @@ public class Stats {
         matches.add(statsImage);
     }
 
-        public static boolean isInside (int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2){
+    /**
+     * isInside - method that calculates whether the identified region of interest (from ImageJ)
+     * is inside the labelled region (cell)
+     * @param x1 - x coordinate of the first rectangle (larger)
+     * @param y1 - y coordinate of the first rectangle
+     * @param w1 - width of the first rectangle
+     * @param h1 - height of the first rectangle
+     * @param x2 - x coordinate of the second rectangle (smaller)
+     * @param y2 - y coordinate of the second rectangle
+     * @param w2 - width of the second rectangle
+     * @param h2 - height of the second rectangle
+     * @return
+     */
+        public static boolean isInside(int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2){
             // calculate the edges of the first rectangle
             int left1 = x1;
             int right1 = x1 + w1;
@@ -431,7 +492,11 @@ public class Stats {
             return false;
         }
 
-        public boolean run (String datasetNameParam){
+    /**
+     * run - methods that sets the attributes and runs the statistics calculations on the fileNameList
+     * @param datasetNameParam - name of the dataset to be used
+     */
+    public void run (String datasetNameParam){
 
             pathOutlines = Common.argumentsMap.get(statsOutputDirParamName);
             pathLabels = Common.argumentsMap.get(Common.annotationsPathToParamName);
@@ -451,8 +516,6 @@ public class Stats {
 
             // check matches between labeled and category
             findMatch();
-
-            return true;
         }
 
     }

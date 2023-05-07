@@ -6,6 +6,10 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Class ProcessImages
+ * process the images using ImageJ
+ */
 public class ProcessImages {
 
     private HashMap<String,String> predefinedValuesMap = new HashMap<>();
@@ -27,10 +31,16 @@ public class ProcessImages {
     private final String darkMinParamName = "darkMinParam";
     private final String darkMaxParamName = "darkMaxParam";
 
+    /**
+     * Constructor
+     */
     public ProcessImages() {
         createPredefinedValuesMap();
     }
 
+    /**
+     * Constructor - fills the map with the arguments that have predefined values
+     */
     public void createPredefinedValuesMap() {
         this.predefinedValuesMap.put(enhanceContrastParamName, "0.40");
         this.predefinedValuesMap.put(dilateCountParamName, "4");
@@ -49,6 +59,10 @@ public class ProcessImages {
         this.predefinedValuesMap.put(Common.cellSizeMinParamName, "8000");
         this.predefinedValuesMap.put(Common.cellSizeMaxParamName, "103000");
     }
+
+    /**
+     * processImages - method that runs the image processing using ImageJ macros and updates the macros correspondingly
+     */
     public void processImages() {
         String macroTemplatePath = "src\\macros\\processing\\MacroImageProcessingTemplate.txt";
         String macroOutputPath = "src\\macros\\processing\\MacroImageProcessing.ijm";

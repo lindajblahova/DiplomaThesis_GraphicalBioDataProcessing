@@ -7,7 +7,10 @@ import code.processing.ProcessImages;
 
 import java.io.File;
 import java.util.Objects;
-
+/**
+ *  Class Application
+ *  runs the app
+ */
 public class Application {
 
     private final String cropSampleParamName = "cropSample" ;
@@ -17,7 +20,10 @@ public class Application {
     private final String datasetNameParamName = "datasetNameParam" ;
     private final String runProcessingParamName = "runProcessingParam" ;
 
-    public void run(String[] args) {
+    /**
+     * run - runs the application according to inputs from the config file
+     */
+    public void run() {
 
         ReadConfig reader = new ReadConfig();
 

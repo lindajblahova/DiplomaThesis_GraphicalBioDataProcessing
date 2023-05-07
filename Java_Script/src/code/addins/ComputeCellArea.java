@@ -2,14 +2,27 @@ package code.addins;
 
 import code.common.Common;
 
+/**
+ *  Class ComputeCellArea
+ *  calculates estimated cell area in pixels
+ */
 public class ComputeCellArea {
 
-    final String zoomParamName = "zoomParam" ;
-    final String cellMinDiameterParamName = "cellMinDiameterParam" ;
-    final String cellMaxDiameterParamName = "cellMaxDiameterParam" ;
-    final String pixelSizeParamName = "pixelSizeParam" ;
-    final String fovParamName = "fovParam" ;
+    private final String zoomParamName = "zoomParam" ;
+    private final String cellMinDiameterParamName = "cellMinDiameterParam" ;
+    private final String cellMaxDiameterParamName = "cellMaxDiameterParam" ;
+    private final String pixelSizeParamName = "pixelSizeParam" ;
+    private final String fovParamName = "fovParam" ;
 
+    /**
+     *  calculation - performs calculation of estimated cell area based on arguments
+     * @param zoom - used microscope zoom
+     * @param cellMinDiameter - minimum cell diameter in micrometers
+     * @param cellMaxDiameter - maximum cell diameter in micrometers
+     * @param pixelSize - pixel size of the camera used in micrometers
+     * @param fieldOfView - field of view of the microscope used
+     * @return double[] - estimated interval of the cell area
+     */
     private double[] calculation(int zoom, int cellMinDiameter, int cellMaxDiameter, double pixelSize, double fieldOfView) {
 
         double areaMinMicrometers = Math.PI * Math.pow((double) cellMinDiameter/2, 2);
@@ -21,6 +34,9 @@ public class ComputeCellArea {
         return new double[]{areaMinPixels,areaMaxPixels};
     }
 
+    /**
+     *  computeCellArea - gets the necessary arguments and stores the results in the arguments map
+     */
     public void computeCellArea() {
         double[] computedCellAreaInterval = calculation(Integer.parseInt(Common.argumentsMap.get(zoomParamName)),
                 Integer.parseInt(Common.argumentsMap.get(cellMinDiameterParamName)),
