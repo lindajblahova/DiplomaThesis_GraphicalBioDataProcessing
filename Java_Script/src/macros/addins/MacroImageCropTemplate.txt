@@ -1,0 +1,14 @@
+File.openSequence("cropTmpDirectoryParam");
+if (paramIsFirstRun) {
+	waitForUser("Create Region of Interest Selection");
+	run("ROI Manager...");
+	roiManager("Add");
+	roiManager("List");
+	saveAs("Results", "cropDirectoryParam/region.csv");
+} else {
+	makeRectangle(paramX, paramY, paramWidth, paramHeight);
+}
+run("Crop");
+run("Image Sequence... ", "select=cropDirectoryParam dir=cropDirectoryParam format=JPG use");
+close();
+run("Quit");

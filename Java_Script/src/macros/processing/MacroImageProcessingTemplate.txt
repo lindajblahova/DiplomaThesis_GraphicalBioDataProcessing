@@ -1,0 +1,28 @@
+imgnm  = "fileNameParam";
+title = imgnm + ".jpg";
+title1 = imgnm + "-1.jpg";
+open("sampleDirParam/" + title);
+run("Duplicate...", " ");
+getStatistics(mean, std);
+if((mean > isNotDarkParam && std > isLightSTDParam) || std >= isDarkSTDParam) {
+	setMinAndMax(lightMinParam, lightMaxParam);
+} else if ((mean < isNotLightParam && std < isNeutralSTDParam) 
+	|| (mean > isNeutral && std < isDarkSTDParam)) {
+	setMinAndMax(neutralMinParam, neutralMaxParam);
+} else { setMinAndMax(darkMinParam, darkMaxParam);}
+run("Split Channels");
+selectWindow("" + title1 + " (green)");
+run("Enhance Contrast...", "saturated=enhContrastParam normalize equalize");
+run("Auto Threshold", "method=Minimim ");
+run("Convert to Mask");
+//for (i=0; i<dilateCountParam; i++) {run("Dilate");}
+run("Dilate");
+run("Analyze Particles...", "size=cellSizeMinParam-cellSizeMaxParam circularity=0.10-1.00 show=Outlines display exclude clear summarize overlay add");
+selectWindow(title);
+roiManager("Show All");
+run("Flatten");
+saveAs("Png", "statsOutputDirParam/img/" + imgnm + ".png");
+saveAs("Results", "statsOutputDirParam/results/Results_" + imgnm + ".csv");
+roiManager("List");
+saveAs("Results", "statsOutputDirParam/list/List_" + imgnm + ".csv");
+run("Quit");
