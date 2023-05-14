@@ -335,7 +335,7 @@ def active_learning_test(run_count, epoch, base_size, target, path, train_frac, 
 
         # split the selected data to train/test for training the model
         X_train, X_test, y_train, y_test = train_test_split(feature_selection, y, test_size=train_test_size,
-                                                            random_state=42)
+                                                            random_state=train_random)
         granulocytes_count, agranulocytes_count = data_train[target].value_counts()
 
         # create Active Learner - Logistic Regression
@@ -397,7 +397,8 @@ def active_learning_test(run_count, epoch, base_size, target, path, train_frac, 
         plt.savefig(plot_save_name, bbox_inches='tight')
         plt.show()
 
-        # testing section
+        # TESTING section
+        
         # prepare the tesing data in the same way the training data were prepared
         label_encoder = preprocessing.LabelEncoder()
         y_testing = label_encoder.fit_transform(data_test[target])
